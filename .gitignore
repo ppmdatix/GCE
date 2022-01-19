@@ -144,7 +144,6 @@ cython_debug/
 docs/api
 
 # Data
-data
 **/catboost_cached_datasets/**
 *.bin
 *.cbm
@@ -157,6 +156,10 @@ data
 *.tmp
 *.zip
 events.out.tfevents.*
+*fetch_kddcup99.csv
+*training_preprocessed.csv
+*Dont_Get_Kicked/training_preprocessed.csv
+
 
 # Output
 output/**/*.*
