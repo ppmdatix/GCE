@@ -13,6 +13,13 @@ if dataset.lower() == "kdd":
 elif dataset.lower() == "forest_cover":
     path = directory + "forest_cover.csv"
     target = "Cover_Type"
+elif dataset.lower() == "adult_income":
+    path = directory + "adult.csv"
+    target = "income"
+elif dataset.lower() == "dont_get_kicked":
+    path = directory + "dontgetkicked.csv"
+    target = "IsBadBuy"
+
 
 else:
     raise Exception('no such dataset')

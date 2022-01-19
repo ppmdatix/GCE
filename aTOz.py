@@ -18,6 +18,19 @@ elif dataset.lower() == "forest_cover":
     path = dataDir + "training_processed.csv"# "forest_cover.csv"
     resDir = "results/Forest_Cover/"
     target = "Cover_Type"
+elif dataset.lower() == "adult_income":
+    dataDir = "data/Adult_Income/"
+    path = dataDir + "training_processed.csv"# "forest_cover.csv"
+    resDir = "results/Adult_Income/"
+    target = "target"
+elif dataset.lower() == "dont_get_kicked":
+    dataDir = "data/Dont_Get_Kicked/"
+    path = dataDir + "training_processed.csv"# "forest_cover.csv"
+    resDir = "results/Dont_Get_Kicked/"
+    target = "target"
+
+
+
 
 else:
     raise Exception('no such dataset')
@@ -28,7 +41,7 @@ epochs     = int(sys.argv[4])
 batch_size = int(sys.argv[5])
 k          = int(sys.argv[6])
 
-target_name = "target"  
+target_name = "target"
 if len(sys.argv) > 7:
     target_name = sys.argv[7]
 
@@ -71,5 +84,5 @@ for relational_batch in [True, False]:
 
             df.to_csv(plot_path + '.csv', index=False)
 if k > 1:
-    save_path = create_path(resDir.replace("data", "results"), model_name,epochs, batch_size, k)
+    save_path = create_path(resDir, model_name,epochs, batch_size, k)
     box_plot(results, path=save_path)

@@ -40,4 +40,7 @@ to reproduce an experiment, run
 supported datasets:
 - `kdd`
 - `forest_cover`
+- `adult_income`
+- `dont_get_kicked`
+
 
