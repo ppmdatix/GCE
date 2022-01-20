@@ -19,7 +19,7 @@ elif dataset.lower() == "used_cars":
 
 
 
-models = ["mlp", "resnet"]
+models = ["resnet","mlp"]
 batch_sizes = [128, 256]
 
 for model in models:
