@@ -17,7 +17,7 @@ import sys
 # insert at 1, 0 is the script path (or '' in REPL)
 sys.path.insert(1, '/Users/ppx/Desktop/PhD/rtdl')
 
-from rtdl.lib.deep import IndexLoader
+from lib.deep import IndexLoader
 import pandas as pd
 
 
