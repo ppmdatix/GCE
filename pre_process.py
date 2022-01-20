@@ -19,6 +19,9 @@ elif dataset.lower() == "adult_income":
 elif dataset.lower() == "dont_get_kicked":
     path = directory + "dontgetkicked.csv"
     target = "IsBadBuy"
+elif dataset.lower() == "used_cars":
+    path = directory + "cars.csv"
+    target = "price_usd"
 
 
 else:

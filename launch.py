@@ -12,6 +12,9 @@ elif dataset.lower() == "adult_income":
     task_type = "binclass"
 elif dataset.lower() == "dont_get_kicked":
     task_type = "binclass"
+elif dataset.lower() == "used_cars":
+    task_type = "regression"
+
 
 
 
