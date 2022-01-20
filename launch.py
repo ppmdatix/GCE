@@ -1,10 +1,24 @@
 import os
 
 
+dataset = sys.argv[1]
+
+if dataset.lower() == "kdd":
+    task_type = "multiclass"
+elif dataset.lower() == "forest_cover":
+    task_type = "multiclass"
+elif dataset.lower() == "adult_income":
+    task_type = "binclass"
+elif dataset.lower() == "dont_get_kicked":
+    task_type = "binclass"
+
+
+
+
 models = ["mlp", "resnet"]
 batch_sizes = [64, 128]
 
 for model in models:
     for batch_size in batch_sizes:
-        command = "python aTOz.py dont_get_kicked binclass %s 10 %s 10" % (model, str(batch_size))
+        command = "python aTOz.py %s %s %s 10 %s 10" % (dataset, task_type, model, str(batch_size))
         os.system(command)
