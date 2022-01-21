@@ -36,7 +36,6 @@ to reproduce an experiment, run
  python aTOz.py <dataset> <task> <model_name> <epoch> <batch_size> <k>
 ```
 
-
 supported datasets:
 - `kdd`
 - `forest_cover`
@@ -44,3 +43,6 @@ supported datasets:
 - `dont_get_kicked`
 
 
+## Presented results
+
+All experiments were conducted on a Intel(R) Xeon(R) 2.30GHz core under the Python environment.
