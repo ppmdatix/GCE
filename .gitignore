@@ -156,6 +156,7 @@ docs/api
 *.tmp
 *.zip
 *.xml
+*.csv
 events.out.tfevents.*
 *fetch_kddcup99.csv
 *training_preprocessed.csv
