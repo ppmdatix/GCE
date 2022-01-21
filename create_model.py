@@ -5,7 +5,7 @@ import torch.nn.functional as F
 device = torch.device('cpu')
 
 
-def create_model(X_all, n_classes=None, task_type="regression", model_name="mlp"):
+def create_model(X_all, n_classes=None, task_type="regression", model_name="mlp", optim="adam"):
     if task_type == "multiclass":
         d_out = n_classes
     else:
@@ -42,12 +42,21 @@ def create_model(X_all, n_classes=None, task_type="regression", model_name="mlp"
         )
 
     _model.to(device)
-    optimizer = (
-        _model.make_default_optimizer()
-        if isinstance(_model, rtdl.FTTransformer)
+
+    optimizer = None
+
+    if optim.lower() == "adam":
+        optimizer = torch.optim.Adam(_model.parameters(), lr=lr, weight_decay=weight_decay)
+    elif optim.lower() == "adagrad":
+        torch.optim.Adagrad(_model.parameters(), lr=lr, weight_decay=weight_decay)
+
+    #optimizer = (
+    #    _model.make_default_optimizer()
+    #    if isinstance(_model, rtdl.FTTransformer)
     #     else torch.optim.AdamW(_model.parameters(), lr=lr, weight_decay=weight_decay)
-        else torch.optim.Adam(_model.parameters(), lr=lr, weight_decay=weight_decay)
-    )
+    #    else torch.optim.Adam(_model.parameters(), lr=lr, weight_decay=weight_decay)
+    #)
+
     loss_fn = (
         F.mse_loss
         # F.binary_cross_entropy_with_logits

@@ -14,6 +14,9 @@ dataset = sys.argv[1]
 nrows = None
 
 
+optim = "adagrad"
+
+
 if dataset.lower() == "kdd":
     dataDir = "data/KDD99/"
     path = dataDir + "training_processed.csv"# "fetch_kddcup99.csv"
@@ -79,7 +82,7 @@ for _k in range(k):
 
         if relational_batch:
 
-            model, optimizer, loss_fn = create_model(X_all, n_classes=n_classes, task_type=task_type, model_name=model_name)
+            model, optimizer, loss_fn = create_model(X_all, n_classes=n_classes, task_type=task_type, model_name=model_name, optim=optim)
             modelRB     = deepcopy(model)
             optimizerRB = deepcopy(optimizer)
             loss_fnRB     = deepcopy(loss_fn)
