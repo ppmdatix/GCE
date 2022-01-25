@@ -21,9 +21,13 @@ elif dataset.lower() == "used_cars":
 
 models = ["resnet","mlp"]
 batch_sizes = [128, 256]
+epochs = 50
+reproduction = 5
+
+
 
 for model in models:
     for batch_size in batch_sizes:
-        command = "python aTOz.py %s %s %s 10 %s 10" % (dataset, task_type, model, str(batch_size))
+        command = "python aTOz.py %s %s %s %s %s %s" % (dataset, task_type, model, str(epochs),  str(batch_size), str(reproduction))
         os.system(command)
         print("model:%s - batch:%s" % (model, str(batch_sizes)))
