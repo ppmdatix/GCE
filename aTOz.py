@@ -5,6 +5,9 @@ from plot_losses import plot_losses, create_path
 import sys
 import pandas as pd
 from box_plot import box_plot
+from copy import deepcopy
+
+
 
 dataset = sys.argv[1]
 
@@ -62,7 +65,16 @@ results = {"rb": [], "norb": []}
 
 for relational_batch in [True, False]:
     for _k in range(k):
-        model, optimizer, loss_fn = create_model(X_all, n_classes=n_classes, task_type=task_type, model_name=model_name)
+
+        if relational_batch:
+
+            model, optimizer, loss_fn = create_model(X_all, n_classes=n_classes, task_type=task_type, model_name=model_name)
+            modelRB     = deepcopy(model)
+            optimizerRB = deepcopy(optimizer)
+            loss_fnRB     = deepcopy(loss_fn)
+        else:
+            model, optimizer, loss_fn = modelRB, optimizerRB, loss_fnRB
+            
         losses = learn_that(
                     model,
                     optimizer,
