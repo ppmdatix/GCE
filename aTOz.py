@@ -63,8 +63,8 @@ else:
 
 results = {"rb": [], "norb": []}
 
-for relational_batch in [True, False]:
-    for _k in range(k):
+for _k in range(k):
+    for relational_batch in [True, False]:
 
         if relational_batch:
 
