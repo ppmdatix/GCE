@@ -19,7 +19,7 @@ elif dataset.lower() == "used_cars":
 
 
 
-models = ["transformer","resnet","mlp"]
+models = ["resnet","mlp"]
 batch_sizes = [128, 256]
 epochs = 50
 reproduction = 5
