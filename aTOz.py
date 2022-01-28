@@ -11,6 +11,9 @@ from copy import deepcopy
 
 dataset = sys.argv[1]
 
+nrows = None
+
+
 if dataset.lower() == "kdd":
     dataDir = "data/KDD99/"
     path = dataDir + "training_processed.csv"# "fetch_kddcup99.csv"
@@ -31,6 +34,7 @@ elif dataset.lower() == "dont_get_kicked":
     path = dataDir + "training_processed.csv"# "forest_cover.csv"
     resDir = "results/Dont_Get_Kicked/"
     target = "target"
+    nrows = 10000
 elif dataset.lower() == "used_cars":
     dataDir = "data/Usedcarscatalog/"
     path = dataDir + "training_processed.csv"# "forest_cover.csv"
@@ -53,8 +57,11 @@ target_name = "target"
 if len(sys.argv) > 7:
     target_name = sys.argv[7]
 
+
+
+
 X, y, old_x, X_all, y_std, target_values = \
-    load_data(path, task_type=task_type, target_name=target_name)
+    load_data(path, task_type=task_type, target_name=target_name, nrows=nrows)
 
 if task_type == "multiclass":
     n_classes = len(target_values)

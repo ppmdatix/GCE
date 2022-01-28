@@ -16,8 +16,8 @@ def to_y(_data):
         return _data.values
 
 
-def load_data(path, target_name="target", task_type="multiclass"):
-    df = pd.read_csv(path)
+def load_data(path, target_name="target", task_type="multiclass", nrows=None):
+    df = pd.read_csv(path, nrows=nrows)
 
     target = df[target_name].values
     target_values = list(set(target))
