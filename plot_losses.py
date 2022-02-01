@@ -12,13 +12,14 @@ def create_path(data_path, model, e, bs, rb):
     return result
 
 
-def plot_losses(_losses, title="this is a graph", path=None, print_mode=False):
+def plot_losses(_losses, title=None, path=None, print_mode=False):
     for key in _losses:
         plt.plot([np.log(x) for x in _losses[key]], label=key)
     plt.xlabel("epoch")
     plt.ylabel("loss")
     plt.legend()
-    plt.title(title)
+    if title is not None:
+        plt.title(title)
 
     if path is not None:
         plt.savefig(path)
