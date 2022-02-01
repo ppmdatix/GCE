@@ -3,13 +3,13 @@ import sys
 
 
 if len(sys.argv) == 1:
-    datasets = ["kdd", "forest_cover", "adult_income", "dont_get_kicked", "used_cars"]
+    datasets = ["kdd", "forest_cover", "adult_income", "dont_get_kicked", "used_cars", "compas"]
 else:
     datasets = [sys.argv[1]]
 
 
 
-models = ["mlp"]
+models = ["resnet"]
 batch_sizes = [128]
 epochs = 10
 reproduction = 10
@@ -26,6 +26,8 @@ for dataset in datasets:
         task_type = "binclass"
     elif dataset.lower() == "used_cars":
         task_type = "regression"
+    elif dataset.lower() == "compas":
+        task_type = "binclas"
     for model in models:
         for batch_size in batch_sizes:
             command = "python aTOz.py %s %s %s %s %s %s" % (dataset, task_type, model, str(epochs),  str(batch_size), str(reproduction))

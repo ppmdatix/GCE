@@ -22,7 +22,9 @@ elif dataset.lower() == "dont_get_kicked":
 elif dataset.lower() == "used_cars":
     path = directory + "cars.csv"
     target = "price_usd"
-
+elif dataset.lower() == "compas":
+    path = directory + "compas-scores-two-years.csv"
+    target = "is_recid"
 
 else:
     raise Exception('no such dataset')

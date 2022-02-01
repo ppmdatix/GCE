@@ -40,7 +40,11 @@ elif dataset.lower() == "used_cars":
     path = dataDir + "training_processed.csv"# "forest_cover.csv"
     resDir = "results/Usedcarscatalog/"
     target = "price_usd"
-
+elif dataset.lower() == "compas":
+    dataDir = "data/compas/"
+    path = dataDir + "training_processed.csv"#
+    resDir = "results/compas/"
+    target = "is_recid"
 
 
 

@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 
 
-def box_plot(losses, title="This is a graph", path=None):
+def box_plot(losses, title=None, path=None):
     labels = ["rb", "norb"]
     colors = ['pink', 'lightblue']
 
@@ -20,7 +20,8 @@ def box_plot(losses, title="This is a graph", path=None):
     ax.yaxis.grid(True)
     ax.set_ylabel('Final Loss')
     plt.legend()
-    plt.title(title)
+    if title is not None:
+        plt.title(title)
 
     if path is not None:
         plt.savefig(path)
