@@ -27,7 +27,7 @@ for dataset in datasets:
     elif dataset.lower() == "used_cars":
         task_type = "regression"
     elif dataset.lower() == "compas":
-        task_type = "binclas"
+        task_type = "binclass"
     for model in models:
         for batch_size in batch_sizes:
             command = "python aTOz.py %s %s %s %s %s %s" % (dataset, task_type, model, str(epochs),  str(batch_size), str(reproduction))
