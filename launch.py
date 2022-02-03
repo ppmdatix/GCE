@@ -9,7 +9,7 @@ else:
 
 
 
-models = ["mlp"] # "resnet"]
+models = ["resnet"] # "resnet"]
 batch_sizes = [128]
 epochs = 10
 reproduction = 10
