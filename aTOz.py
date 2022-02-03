@@ -113,4 +113,5 @@ for _k in range(k):
             df.to_csv(plot_path + '.csv', index=False)
 if k > 1:
     save_path = create_path(resDir, model_name,epochs, batch_size, k)
+    print(results)
     box_plot(results, path=save_path)
