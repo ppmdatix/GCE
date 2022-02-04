@@ -108,13 +108,13 @@ for _k in range(k):
             results["norb"].append(losses["test"][-1])
         title = dataset + "-relationalBatch:" + str(relational_batch)
         if _k == 1:
-            plot_path = create_path(resDir, model_name, epochs, batch_size, relational_batch)
+            plot_path = create_path(resDir, model_name + "withOptim:"+optim, epochs, batch_size, relational_batch)
             plot_losses(losses, title=title, path=plot_path)
 
             df = pd.DataFrame(losses)
 
             df.to_csv(plot_path + '.csv', index=False)
 if k > 1:
-    save_path = create_path(resDir, model_name,epochs, batch_size, k)
+    save_path = create_path(resDir, model_name+ "withOptim:"+optim,epochs, batch_size, k)
     print(results)
     box_plot(results, path=save_path)
