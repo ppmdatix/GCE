@@ -48,7 +48,7 @@ def create_model(X_all, n_classes=None, task_type="regression", model_name="mlp"
     if optim.lower() == "adam":
         optimizer = torch.optim.Adam(_model.parameters(), lr=lr, weight_decay=weight_decay)
     elif optim.lower() == "adagrad":
-        torch.optim.Adagrad(_model.parameters(), lr=lr, weight_decay=weight_decay)
+        optimizer = torch.optim.Adagrad(_model.parameters(), lr=lr, weight_decay=weight_decay)
 
     #optimizer = (
     #    _model.make_default_optimizer()
