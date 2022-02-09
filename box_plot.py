@@ -2,8 +2,8 @@ from matplotlib import pyplot as plt
 
 
 def box_plot(losses, title=None, path=None):
-    labels = ["rb", "norb"]
-    colors = ['pink', 'lightblue']
+    labels = losses.keys() # ["rb", "norb"]
+    colors = ['pink', 'lightblue', 'silver', 'bisque', 'fushia', 'crimson']
 
     final_losses = [losses[label] for label in labels]
 

@@ -13,8 +13,7 @@ dataset = sys.argv[1]
 
 nrows = None
 
-
-optim = "adagrad"
+optims = ["adam", "adagrad"]
 
 
 if dataset.lower() == "kdd":
@@ -75,45 +74,50 @@ if task_type == "multiclass":
 else:
     n_classes = None
 
-results = {"rb": [], "norb": []}
+results = {} # "rb": [], "norb": []}
+for optim in optims:
+    results["rb-"+optim] = []
+    results["norb-"+optim] = []
+
 
 for _k in range(k):
-    for relational_batch in [True, False]:
+    for optim in optims:
+        for relational_batch in [True, False]:
 
-        if relational_batch:
+            if relational_batch:
 
-            model, optimizer, loss_fn = create_model(X_all, n_classes=n_classes, task_type=task_type, model_name=model_name, optim=optim)
-            modelRB     = deepcopy(model)
-            optimizerRB = deepcopy(optimizer)
-            loss_fnRB     = deepcopy(loss_fn)
-        else:
-            model, optimizer, loss_fn = modelRB, optimizerRB, loss_fnRB
-            
-        losses = learn_that(
-                    model,
-                    optimizer,
-                    loss_fn,
-                    X,
-                    y,
-                    y_std,
-                    epochs,
-                    batch_size,
-                    relational_batch,
-                    old_x,
-                    print_mode=False,
-                    _task_type=task_type)
-        if relational_batch:
-            results["rb"].append(losses["test"][-1])
-        else:
-            results["norb"].append(losses["test"][-1])
-        title = dataset + "-relationalBatch:" + str(relational_batch)
-        if _k == 1:
-            plot_path = create_path(resDir, model_name + "withOptimoo"+optim, epochs, batch_size, relational_batch)
-            plot_losses(losses, title=title, path=plot_path)
+                model, optimizer, loss_fn = create_model(X_all, n_classes=n_classes, task_type=task_type, model_name=model_name, optim=optim)
+                modelRB     = deepcopy(model)
+                optimizerRB = deepcopy(optimizer)
+                loss_fnRB     = deepcopy(loss_fn)
+            else:
+                model, optimizer, loss_fn = modelRB, optimizerRB, loss_fnRB
 
-            df = pd.DataFrame(losses)
+            losses = learn_that(
+                        model,
+                        optimizer,
+                        loss_fn,
+                        X,
+                        y,
+                        y_std,
+                        epochs,
+                        batch_size,
+                        relational_batch,
+                        old_x,
+                        print_mode=False,
+                        _task_type=task_type)
+            if relational_batch:
+                results["rb-"+optim].append(losses["test"][-1])
+            else:
+                results["norb-"+optim].append(losses["test"][-1])
+            title = dataset + "-relationalBatch:" + str(relational_batch)
+            if _k == 1:
+                plot_path = create_path(resDir, model_name + "withOptimoo"+optim, epochs, batch_size, relational_batch)
+                plot_losses(losses, title=title, path=plot_path)
 
-            df.to_csv(plot_path + '.csv', index=False)
+                df = pd.DataFrame(losses)
+
+                df.to_csv(plot_path + '.csv', index=False)
 if k > 1:
     save_path = create_path(resDir, model_name+ "withOptim:"+optim,epochs, batch_size, k)
     print(results)
