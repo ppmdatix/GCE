@@ -81,6 +81,7 @@ for optim in optims:
 
 
 for _k in range(k):
+    print(str(k) + "\n")
     for optim in optims:
         for relational_batch in [True, False]:
 
