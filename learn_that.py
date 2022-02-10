@@ -10,19 +10,18 @@ import sklearn.preprocessing
 import torch
 import zero
 
+from copy import deepcopy as deepcopy
+
 import os
 import sys
 
 import sys
-# insert at 1, 0 is the script path (or '' in REPL)
-sys.path.insert(1, '/Users/ppx/Desktop/PhD/rtdl')
 
 from lib.deep import IndexLoader
 import pandas as pd
+import rtdl
+from data import data as dta
 
-
-
-device = torch.device('cpu')
 
 
 def apply_model(x_num, x_cat=None, model=None):
@@ -68,74 +67,95 @@ def evaluate(part, model, X, y, y_std, task_type="regression"):
     return score
 
 
-def learn_that(_model, _optimizer, _loss_fn, _X, _y, y_std, _epochs, _batch_size, _relational_batch, _old_X, print_mode=False, _task_type="regression"):
-    # Docs: https://yura52.github.io/zero/reference/api/zero.data.IndexLoader.html
 
+def learn_that(_model, _optimizer, _loss_fn, _X, _y, _epochs, _batch_size, _gse, _old_x, print_mode=False, _task_type="regression", sparse=False):
 
-    batch_size = 256
-    train_loader = IndexLoader(len(_X['train']), batch_size, device=device, shuffle=False)
-
-    if print_mode:
-        print(f'Test score before training: {evaluate("test", _model):.4f}')
-
-
-
-
-    report_frequency = len(_X['train']) // _batch_size // 5
-    losses = dict()
-    losses['val'] = []
-    losses['test'] = []
+    size = _X['train'].size()[0]
+    column_count = len(_old_x['train'].columns)
+    losses = {"val": [], "test": []}
     for epoch in range(1, _epochs + 1):
 
-        # X is a torch Variable
-        permutation = torch.randperm(_X['train'].size()[0])
+        print("epoch " + str(epoch) + " on " + str(_epochs) + " epochs \n")
+        permutation = torch.randperm(size)
 
-        for iteration in range(0, _X['train'].size()[0], batch_size):
+        for iteration in range(0, size, _batch_size):
 
-            batch_idx = permutation[iteration:iteration + batch_size]
-            # x_batch, y_batch = _X['train'][batch_idx], _y['train'][batch_idx]
+            batch_idx = permutation[iteration:iteration + _batch_size]
 
-        #for iteration, batch_idx in enumerate(train_loader):
             _model.train()
             _optimizer.zero_grad()
             x_batch = _X['train'][batch_idx]
             y_batch = _y['train'][batch_idx]
 
-            loss = _loss_fn(apply_model(x_batch, model=_model).squeeze(1), y_batch)
+            ypred_batch = apply_model(x_batch, model=_model).squeeze(1)
+
+            loss = _loss_fn(ypred_batch, y_batch)
             loss.backward()
 
-            factors = dict()
+            _old_train_x_data = _old_x['train'][iteration * _batch_size:(iteration+1) * _batch_size]
 
             # Modify gradients
-            if _relational_batch:
+            if _gse:
+                old_params = []
                 for name, param in _model.named_parameters():
-                    if name == "blocks.0.linear.weight":
-                        column_count = len(_old_X['train'].columns)
-                        factors = torch.ones(column_count,param.grad.shape[0])
+                    if (name == "blocks.0.linear.weight") or (name=="first_layer.weight"):
+                        factors = torch.ones(column_count, param.grad.shape[0])
                         for i in range(column_count):
-                            column = _old_X['train'].columns[i]
-                            if True:  # not column in oldNames:
-                                idx = _old_X['train'][iteration * batch_size:(iteration+1) * batch_size].columns[i]
-                                realCount = _old_X['train'][iteration * batch_size:(iteration+1) * batch_size][idx].sum()
-                                if realCount > 0:
-                                    factors[i] = (batch_size / (1.0 * realCount)) * factors[i]
-                                else:
-                                    ()
-                                    # factors[i] = float('nan') * factors[i]
+                            idx = _old_train_x_data.columns[i]
+                            real_count = _old_train_x_data[idx].sum()
+                            if real_count > 0:
+                                factors[i] = (_batch_size / (1.0 * real_count)) * factors[i]
                         param.grad = torch.mul(param.grad, torch.transpose(factors,0,1))
+                        old_params.append(deepcopy(param))
+
+
+
+            if sparse:
+                for p in _model.parameters():
+                    p.grad = p.grad.to_sparse()
 
             _optimizer.step()
-            if iteration % report_frequency == 0:
-                batch = "batch"
-                if _relational_batch:
-                    batch= "relational-batch"
-                if print_mode:
-                    print(f'(epoch) {epoch} ({batch}) {iteration} (loss) {loss.item():.4f}')
+            if _gse and not sparse:
 
-        losses['val'].append(float(_loss_fn(apply_model(_X['val'],model=_model).squeeze(1), _y['val'])))
-        losses['test'].append(float(_loss_fn(apply_model(_X['test'],model=_model).squeeze(1), _y['test'])))
+                i = 0
+                for name, param in _model.named_parameters():
+                    if (name == "blocks.0.linear.weight") or (name=="first_layer.weight"):
+                        param = torch.where(param.grad == 0, old_params[i], param)
+                        i += 1
 
-        val_score  = evaluate("val", _model, _X, _y, y_std, task_type=_task_type)
-        test_score = evaluate("test", _model, _X, _y, y_std, task_type=_task_type)
+
+        def get_accuracy(mode):
+            count = _y[mode].shape[0]
+
+            y1 = 1 + torch.zeros(count)
+            y0 = torch.zeros(count)
+            trigger = 0.5 + torch.zeros(count)
+            yval = apply_model(_X[mode],model=_model)
+            yval = torch.sigmoid(yval.reshape([count]))
+            yval = torch.where(yval > trigger, y1, y0)
+            acc = float(torch.sum(yval == _y[mode])) / count
+
+            return acc
+
+        if _task_type == "binclass":
+            val_acc = get_accuracy("val")
+            test_acc = get_accuracy("test")
+
+            losses['val'].append(1 - val_acc)
+            losses['test'].append(1 - test_acc)
+
+        else:
+            losses['val'].append(float(_loss_fn(apply_model(_X['val'],   model=_model).squeeze(1), _y['val'])))
+            losses['test'].append(float(_loss_fn(apply_model(_X['test'], model=_model).squeeze(1), _y['test'])))
+        if print_mode:
+            batch = "batch"
+            if _gse:
+                batch= "gse-batch"
+            valoss = losses['val'][-1]
+            teloss = losses['test'][-1]
+            print(f'(VALIDATION epoch) {epoch} ({batch}) (loss) {valoss}')
+            print(f'(TEST epoch) {epoch} ({batch}) (loss) {teloss}')
+
+
 
     return losses

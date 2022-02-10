@@ -3,6 +3,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.xml
+
+# Trash
+trash/*
 
 # C extensions
 *.so

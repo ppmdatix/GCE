@@ -1,5 +1,5 @@
-# Relational Batch
-This repository is related to *Stochastic Gradient Descent on Categorical Data*.
+# Gradient estimator for categorical features
+This repository is related to *Stochastic Gradient Descent with gradient estimator for categorical features*.
 
 ## Setup the environment
 ###  PyTorch environment
@@ -36,13 +36,22 @@ to reproduce an experiment, run
  python aTOz.py <dataset> <task> <model_name> <epoch> <batch_size> <k>
 ```
 
+to reproduce **all** experiments with the `data/data.py` settings, run
+
+```
+ python launch.py
+```
+
+
+
 supported datasets:
 - `kdd`
 - `forest_cover`
 - `adult_income`
 - `dont_get_kicked`
+- `compas`
+- `used_cars`
 
 
 ## Presented results
-
 All experiments were conducted on a Intel(R) Xeon(R) 2.30GHz core under the Python environment.
