@@ -2,7 +2,7 @@ import torch
 
 device = torch.device('cpu')
 
-datasets = ["kdd", "forest_cover", "adult_income", "dont_get_kicked", "used_cars", "compas"]
+datasets =["kdd", "forest_cover", "adult_income", "dont_get_kicked", "used_cars", "compas"]
 colors   = ['bisque', 'pink', 'lightblue', 'silver', 'bisque', 'fushia', 'crimson']
 
 
